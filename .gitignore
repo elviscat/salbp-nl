@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+*.lock
+results/smoke/
+results/dryrun*/
+_對話自動存檔/
+*.bak*
+data/raw/

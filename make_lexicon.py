@@ -1,0 +1,146 @@
+"""Generate the fixed task-name lexicon (nl_lexicon.json). Deterministic; run once."""
+import json, os
+items = """Install battery connector
+Fasten 4x M1.4 screws on midframe
+Apply adhesive to display bezel
+Place display module onto midframe
+Press-fit front camera module
+Attach flex cable to mainboard
+Install SIM tray assembly
+Insert SIM tray gasket
+Apply thermal pad to SoC shield
+Mount SoC heat spreader
+Route antenna cable along midframe
+Solder ground spring to mainboard
+Install volume button flex
+Install power button flex
+Fasten 2x M1.2 screws on speaker bracket
+Seat earpiece speaker
+Install bottom speaker module
+Install haptic motor
+Glue haptic motor to chassis
+Attach battery with pull-tab adhesive
+Press battery into tray
+Connect display flex to mainboard
+Connect battery flex to mainboard
+Connect rear camera flex to mainboard
+Install rear camera module
+Fasten rear camera bracket with 3x M1.2 screws
+Apply waterproof gasket to midframe
+Place mainboard into midframe
+Fasten 6x M1.4 screws on mainboard
+Install USB-C port assembly
+Seal USB-C port with gasket
+Install microphone module
+Install proximity sensor cover
+Apply conductive tape to display flex
+Fold display flex cable
+Place EMI shield over connectors
+Snap EMI shield into place
+Laser-mark serial number on housing
+Scan serial number barcode
+Wipe display glass with isopropyl alcohol
+Remove protective film from rear glass
+Apply rear glass adhesive frame
+Align rear glass to midframe
+Press rear glass in heated fixture
+Hold rear glass press for cure time
+Install wireless charging coil
+Connect wireless charging coil flex
+Place NFC antenna sheet
+Install fingerprint sensor flex
+Fasten fingerprint bracket with 2x M1.0 screws
+Install face-recognition sensor module
+Calibrate proximity sensor
+Test display for dead pixels
+Test touch panel response
+Test speaker output
+Test microphone input
+Test vibration motor
+Test camera focus
+Test wireless charging
+Test battery charge current
+Run boot-up self test
+Flash firmware image
+Verify firmware checksum
+Write IMEI to device
+Check IMEI label against device
+Apply screen protector film
+Apply back label
+Inspect gap flush around display
+Inspect adhesive coverage
+Inspect screw torque marks
+Measure midframe flatness
+Check connector seating by vision camera
+Place device into carrier tray
+Transfer device to next fixture
+Rotate device 180 degrees in fixture
+Load midframe onto pallet
+Unload finished unit from pallet
+Dispense dust-proof foam on speaker mesh
+Place speaker mesh
+Install earpiece dust mesh
+Install SIM ejector pin holder
+Apply light-blocking tape around camera
+Apply black tape to display edge
+Install mid-plate shielding can
+Fasten shielding can with 4x M1.2 screws
+Install antenna spring contacts
+Solder antenna feed point
+Reflow touch-up on connector pads
+Clean flux residue from mainboard
+Apply conformal coating to mainboard edge
+Cure conformal coating under UV lamp
+Install ambient light sensor
+Install LED flash module
+Seat flash diffuser
+Attach pull-tab to battery
+Install display backing foam
+Apply foam gasket to battery compartment
+Insert board-to-board connector
+Latch board-to-board connector lock
+Install SIM card slot cover
+Bend FPC for camera module
+Fix FPC with polyimide tape
+Place insulating sheet over battery
+Attach graphite heat sheet
+Press graphite sheet with roller
+Apply thermal gel to charging IC
+Install camera lens ring
+Glue camera lens ring
+Press camera glass into housing
+Check camera lens for dust
+Blow ionised air over camera cavity
+Install display ribbon cable shield
+Fasten display connector bracket with 2x M1.2 screws
+Fasten bottom speaker bracket with 3x M1.2 screws
+Fasten SIM tray bracket with 2x M1.2 screws
+Install frame antenna insert
+Snap antenna insert cap
+Dispense sealant around frame antenna break
+Cure sealant at 60 C
+Install ear-speaker mesh frame
+Install side key actuator
+Fit side key dust seal
+Place button cap on actuator
+Align button cap to midframe cutout
+Install Taptic-style linear actuator bracket
+Torque-check 4x M1.4 screws on midframe
+Pre-assemble display module with frame
+Laminate display to cover glass
+Debubble laminated display in autoclave
+Install eSIM test pad cover
+Install ambient microphone mesh
+Install secondary microphone module
+Insert grounding foam strip
+Apply anti-static film to display
+Check device mass on scale
+Check water-ingress indicator colour
+Pack charger cable into box
+Place device into retail box
+Seal retail box with label""".split("\n")
+items = [s.strip() for s in items if s.strip()]
+assert len(items) == len(set(items)), "duplicates"
+assert len(items) >= 120, len(items)
+json.dump(items, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "nl_lexicon.json"), "w"), indent=1)
+print(len(items))
