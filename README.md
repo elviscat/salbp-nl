@@ -20,11 +20,40 @@ SALBP-NL is a test set of 200 generated process sheets: 50 SALBP-1 instances, ea
 | `docs/analysis_plan_prereg_zh.md` | Analysis plan v1.0 to v1.4, in Chinese, including the deviations logged during the run |
 | `docs/DATA_SOURCES.md` | URLs and sha256 of the source files |
 
-## What is not here yet
+## Results
 
-- **The source data and the 200 sheets.** The precedence graphs and task times come from the Scholl (1993) and Otto et al. (2013) data sets at assembly-line-balancing.de. We have not confirmed their redistribution terms, so neither the raw files nor the sheets derived from them are in this repository. `docs/DATA_SOURCES.md` lists the URLs and hashes; the manifest lets you check a regenerated set. The sheets are available on request.
-- **The `--no-think` switch.** After the smoke test the runner got one switch that turns reasoning off for the direct-assignment arm (commit `1a60d2f` on the run machine). The runner here is the earlier frozen version; the patched file will be added.
-- **Result files.** They will be added when the re-run of the requests lost to API timeouts is complete.
+| Path | Content |
+|---|---|
+| `results/expB.csv` | Modelling arms `d`, `dprime`, `r`: 1,400 rows, no API failures after the re-run |
+| `results/c_nothink/expB.csv` | Direct-assignment arm `c` (reasoning off): 600 rows |
+| `results/truth_cpsat_w4_t60.json` | Oracle station counts (CP-SAT, 4 threads, 60 s, solved twice) |
+| `results/expB_summary.md`, `results/c_nothink/expB_summary.md` | Output of the frozen summarizer (all 50 instances) |
+| `results/timeouts_history/` | The result file before each re-run, with the failed rows still in it |
+| `results/freeze_manifest_run_machine_70e5e78.json` | Manifest written on the run machine after the last runner change |
+
+The poster reports the 46 instances with at most 100 tasks; the summarizer output covers all 50, so its headline figures are lower.
+
+### How the run went
+
+- Main run: 9 to 10 November 2026, 27.5 hours. 131 of 1,400 modelling rows ended in a client timeout (300 s); 109 of them were instances with more than 70 tasks.
+- First re-run with a 1,200 s timeout: 11 of 13 rows lost the connection, because a non-streamed request sends no bytes while the model reasons.
+- Second re-run with streaming and a 1,200 s timeout: all 127 remaining rows completed.
+- So 131 rows were obtained with streaming and the longer timeout, the other 1,069 without. Prompt, model, temperature and token cap were the same.
+- The poster submitted for review counts the 131 timeouts as failures (equivalence with feedback 58.7%, single pass 56.2%, paired difference +2.5 points, 95% CI −1.8 to 6.7). With the re-run rows the figures are 58.9%, 56.2% and +2.7 points (−1.6 to 6.9). The conclusions are the same.
+
+### Read the numbers with these limits in mind
+
+- The feedback arm may use up to three attempts of 32,000 tokens each; the single-pass arm gets one. Most extra attempts were triggered by truncated output and stayed truncated. The paired difference therefore mixes feedback with output budget.
+- For three instances (barthol2, scholl, wee-mag) CP-SAT stopped at 60 s with a feasible, unproven solution. "Oracle" means the best station count found, not a proven optimum.
+- Truncated outputs count as failures.
+- "No more stations than the oracle" is a loose measure: most plans that pass it without an equivalent model have the right station count but miss a precedence relation.
+- The template-aware parser scores 100% because it inverts the generator. It checks the test set, not a method.
+- The endpoint accepts a seed but does not reproduce outputs. Three seeds are three samples.
+
+## What is not here
+
+- **The source data and the 200 sheets.** The precedence graphs and task times come from the Scholl and Otto et al. (2013) data sets at assembly-line-balancing.de. The site's legal notice (checked 11 November 2026) prohibits redistribution without written permission, so neither the raw files nor the sheets derived from them are in this repository. `docs/DATA_SOURCES.md` lists the URLs and hashes; the manifest lets you check a regenerated set.
+- **The patched runner.** On the run machine `run_expB.py` gained three switches, each off by default: `--no-think` (reasoning off for arm `c`), `--timeout` and `--stream`. The runner in this repository is the earlier frozen version (`be44916`); the patched file will be added from the run machine.
 
 ## Run
 
